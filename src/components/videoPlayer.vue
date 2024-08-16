@@ -40,6 +40,10 @@
     height: {
       type: String,
       default: "100%"
+    },
+    controls: {
+      type: Boolean,
+      default: true
     }
   })
   
@@ -71,9 +75,9 @@
       // download: true, //显示下载按钮
       // controls: false,
       // marginControls: true,
-      controls: {
+      controls: props.controls ? {
         mode: "bottom"
-      },
+      } : false,
       // icons: {
       //   startPlay: `<div></div>`,
       //   startPause: `<div></div>`

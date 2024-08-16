@@ -1,8 +1,10 @@
 <script setup lang="js">
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import request from '@/request.js'
 
+const router = useRouter()
 const loginModal = ref(false)
 const userInfo = ref({
   name: localStorage.getItem('name'),
@@ -12,7 +14,7 @@ const loginData = ref({
   password: '123456',
 })
 const loginHandler = () => {
-  if (!userInfo.value?.id) {
+  if (!userInfo.value?.name) {
     loginModal.value = true
   }
 }
@@ -32,6 +34,17 @@ const loginConfirm = () => {
       userInfo.value = res.data
     }
   })
+}
+const checkLogin = path => {
+  if (userInfo.value.name) {
+    router.push(path)
+  } else {
+    ElMessage({
+      message: '请登录',
+      type: 'warning',
+    })
+    loginHandler()
+  }
 }
 </script>
 
@@ -58,10 +71,20 @@ const loginConfirm = () => {
             />
             <span class="header-title">AI教育视频</span>
           </el-menu-item>
-          <el-menu-item index="1" @click="$router.push('/list')">视频库</el-menu-item>
-          <el-menu-item index="2" @click="$router.push('/questionList')">题库</el-menu-item>
+          <el-menu-item
+            index="1" 
+            @click="checkLogin('/list')">视频库</el-menu-item>
+          <el-menu-item 
+            index="2" 
+            @click="checkLogin('/questionList')">题库</el-menu-item>
           <div class="flex-grow" />
-          <el-menu-item index="3" @click="alert('暂未开放此功能, 敬请期待')">升级VIP</el-menu-item>
+          <el-menu-item
+            index="3"
+            @click="ElMessage({
+              message: '暂未开放此功能, 敬请期待',
+            })">
+            升级VIP
+          </el-menu-item>
           <el-menu-item index="4" @click="loginHandler">{{userInfo.name ? userInfo.name : '登录'}}</el-menu-item>
           <!-- <el-sub-menu index="4">
             <template #title>Workspace</template>

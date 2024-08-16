@@ -2,13 +2,21 @@
 import { reactive, ref, onMounted } from "vue"
 import VideoPlayer from "@/components/videoPlayer.vue"
 import { useRouter, useRoute } from 'vue-router'
+import useClipboard from 'vue-clipboard3'
+import { ElMessage } from 'element-plus'
+import QrcodeVue from "qrcode.vue"
+import {
+  DocumentCopy
+} from '@element-plus/icons-vue'
 import request from '@/request.js'
-import dayjs from 'dayjs'
 
 const router = useRouter()
 const route = useRoute()
 const info = ref({})
 const drawer = ref(false)
+const dialog = ref(false)
+const shareUri = ref('http://159.75.178.32/#/shareVideo/1')
+const qrCode = ref('http://159.75.178.32/#/shareVideo/1')
 const editData = ref({
   userId: 1,
   videoId: route.params.videoId,
@@ -24,7 +32,23 @@ const editData = ref({
   afterClassQuestionCount: 5,
   afterClassQuestionIds: []
 })
-console.log(route)
+const { toClipboard } = useClipboard()
+
+const handleCopy = async () => {
+  try {
+    await toClipboard(shareUri.value)
+    ElMessage({
+      message: '复制成功',
+      type: 'success',
+    })
+  } catch (e) {
+    console.error(e)
+    ElMessage({
+      message: '复制失败',
+      type: 'error',
+    })
+  }
+}
 const downloadHandler = () => {
   window.open(`/resources/download?resourceUrl=${info.value.videoUrl}`)
 }
@@ -38,6 +62,21 @@ const goToQuestionListHandler = flag => {
   router.push({ path: '/questionList', query: { flag } })
 }
 const confirmClick = () => {
+  let tmp = Object.assign({}, editData.value)
+  tmp.inClassQuestionIds = shuffleArray(info.value.inClassQuestionIds).slice(0, tmp.inClassQuestionCount)
+  tmp.afterClassQuestionIds = shuffleArray(info.value.afterClassQuestionIds).slice(0, tmp.afterClassQuestionCount)
+  // console.log(tmp)
+  request.post('/shareLinks', tmp).then(res => {
+    if(res.code === 1) {
+      console.log(res)
+      dialog.value = true
+    }
+  })
+}
+const cancelClick = () => {
+  drawer.value = false
+}
+const submitHandler = () => {
   console.log(editData.value)
   request.post('/shareLinks', editData.value).then(res => {
     if(res.code === 1) {
@@ -51,6 +90,13 @@ const formatSeconds = seconds => {
   seconds = seconds % 60;
 
   return `${hours ? hours.toString().padStart(2, '0') + ':' : ''}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+const shuffleArray = arr => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
 }
 onMounted(async () => {
   request.get(`/videos/${route.params.videoId}`).then(res => {
@@ -196,6 +242,13 @@ onMounted(async () => {
       </div>
     </template>
   </el-drawer>
+  <el-dialog v-model="dialog" title="分享链接" width="500">
+    <qrcode-vue :value="qrCode" size="300" />
+    <br />
+    <br />
+    <span>链接🔗：{{ shareUri }}</span>
+    <el-button class="copyButton" type="primary" :icon="DocumentCopy" @click="handleCopy" circle />
+  </el-dialog>
 </template>
 
 <style scoped>
@@ -229,5 +282,8 @@ onMounted(async () => {
 }
 .el-form-item__label {
   width: 100px;
+}
+.copyButton {
+  margin-left: 20px;
 }
 </style>

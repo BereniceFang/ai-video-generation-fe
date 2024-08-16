@@ -1,13 +1,21 @@
 <script setup lang="js">
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 import banner1 from '@/assets/banner1.jpg'
 
 const imgList = [banner1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT24auNFnmM2n4j6vZ1NiexEaIaB5AN7ivCYg&s', '/src/assets/img3.jpeg', '/src/assets/img4.jpeg']
+const myRef = ref()
+const binnerWidth = ref()
+onMounted(()=>{
+  console.log(myRef.value?.clientWidth)
+  binnerWidth.value = myRef.value?.clientWidth
+})
 </script>
 
 <template>
   <div class="common-layout">
-    <div class="block text-center">
-      <el-carousel height="450px">
+    <div class="block text-center binner-wrap" ref="myRef">
+      <el-carousel :height="binnerWidth * 109 / 252 + 'px'">
         <el-carousel-item v-for="item in imgList" :key="item">
           <img :src="item" width="100%" />
         </el-carousel-item>
@@ -20,7 +28,9 @@ const imgList = [banner1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9G
       <h3>还没想好写什么</h3>
       <h3>....</h3>
       <h3>....</h3>
-      <el-button round  @click="alert('暂未开放此功能, 敬请期待')">体验更专业的定制服务</el-button>
+      <el-button round  @click="ElMessage({
+              message: '暂未开放此功能, 敬请期待',
+            })">体验更专业的定制服务</el-button>
     </div>
   </div>
 </template>
@@ -47,6 +57,10 @@ const imgList = [banner1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9G
   font-weight: bold;
   color: var(color);
   margin-left: 10px;
+}
+.binner-wrap {
+  margin: 0 auto;
+  max-width: 2200px;
 }
 .text-center {
   text-align: center;

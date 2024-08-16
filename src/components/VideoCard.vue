@@ -34,7 +34,7 @@ const goToEditHandler = () => {
       <!-- <el-icon v-if="data.star" color="#ff6700" :size="18" @click="clickStar"><StarFilled /></el-icon> -->
       <!-- <el-icon  v-else @click="clickStar"><Star /></el-icon> -->
     </div>
-    <el-tag size="small" type="primary" v-for="item in data?.labels" :key="item">{{item}}</el-tag>
+    <el-tag size="small" type="primary" v-for="item in data?.labels?.slice(0, 3)" :key="item">{{item}}</el-tag>
     <div class="info-wrap">
       <el-text class="mx-1" type="info">来源：{{data?.source}}</el-text>
       <!-- <el-button size="small" type="primary" round>生成学习</el-button> -->
