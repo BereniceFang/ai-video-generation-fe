@@ -1,0 +1,39 @@
+{
+  "name": "ai-video-generation-fe",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@videojs-player/vue": "^1.0.0",
+    "axios": "^1.7.3",
+    "dayjs": "^1.11.12",
+    "element-plus": "^2.7.7",
+    "video.js": "^8.17.1",
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.0",
+    "vue-waterfall-plugin-next": "^2.4.3",
+    "vue3-cookies": "^1.0.6",
+    "vue3-video": "^1.0.1",
+    "vue3-video-play-sbmn": "^1.0.9",
+    "xgplayer": "^3.0.19"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "less": "^4.2.0",
+    "path": "^0.12.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4",
+    "vue-tsc": "^2.0.24"
+  },
+  "description": "This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.",
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
