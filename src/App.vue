@@ -8,13 +8,14 @@ const router = useRouter()
 const loginModal = ref(false)
 const userInfo = ref({
   name: localStorage.getItem('name'),
+  token: localStorage.getItem('token'),
 })
 const loginData = ref({
   email: 'admin@memgleam.com',
   password: '123456',
 })
 const loginHandler = () => {
-  if (!userInfo.value?.name) {
+  if (!userInfo.value.token) {
     loginModal.value = true
   }
 }
@@ -36,7 +37,7 @@ const loginConfirm = () => {
   })
 }
 const checkLogin = path => {
-  if (userInfo.value.name) {
+  if (userInfo.value.token) {
     router.push(path)
   } else {
     ElMessage({
@@ -63,7 +64,7 @@ const checkLogin = path => {
           :ellipsis="false"
           @select="handleSelect"
         >
-          <el-menu-item index="0">
+          <el-menu-item index="0"  @click="checkLogin('/')">
             <img
               style="width: 40px"
               src="@/assets/logo.png"
@@ -77,15 +78,19 @@ const checkLogin = path => {
           <el-menu-item 
             index="2" 
             @click="checkLogin('/questionList')">题库</el-menu-item>
+          <el-menu-item 
+            index="3" 
+            @click="checkLogin('/createVideo')">生成视频</el-menu-item>
+          <div class="flex-grow" />
           <div class="flex-grow" />
           <el-menu-item
-            index="3"
+            index="4"
             @click="ElMessage({
               message: '暂未开放此功能, 敬请期待',
             })">
             升级VIP
           </el-menu-item>
-          <el-menu-item index="4" @click="loginHandler">{{userInfo.name ? userInfo.name : '登录'}}</el-menu-item>
+          <el-menu-item index="4" @click="loginHandler">{{userInfo.token ? userInfo.name : '登录'}}</el-menu-item>
           <!-- <el-sub-menu index="4">
             <template #title>Workspace</template>
             <el-menu-item index="4-1">item one</el-menu-item>

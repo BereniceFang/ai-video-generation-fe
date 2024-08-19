@@ -13,11 +13,12 @@ import request from '@/request.js'
 const router = useRouter()
 const route = useRoute()
 const info = ref({})
-const drawer = ref(false)
+const drawer = ref(route.query?.ids ? true : false)
 const dialog = ref(false)
 const shareUri = ref('http://159.75.178.32/#/shareVideo/1')
 const qrCode = ref('http://159.75.178.32/#/shareVideo/1')
-const editData = ref({
+console.log(route.query)
+const editData = ref(route.query?.ids ? JSON.parse(localStorage.getItem('tmp')) : {
   userId: 1,
   videoId: route.params.videoId,
   enableBeforeClass: false,
@@ -50,7 +51,7 @@ const handleCopy = async () => {
   }
 }
 const downloadHandler = () => {
-  window.open(`/resources/download?resourceUrl=${info.value.videoUrl}`)
+  window.open(info.value.videoUrl)
 }
 const gotoEditHandler = () => {
   drawer.value = true
@@ -59,9 +60,11 @@ const inClassCountChangeHandler = () => {
   console.log('change')
 }
 const goToQuestionListHandler = flag => {
-  router.push({ path: '/questionList', query: { flag } })
+  localStorage.setItem('tmp', JSON.stringify(editData.value))
+  router.push({ path: '/questionList', query: { flag, id: route.params.videoId } })
 }
 const confirmClick = () => {
+  console.log('confirmClick', editData.value, info.value)
   let tmp = Object.assign({}, editData.value)
   tmp.inClassQuestionIds = shuffleArray(info.value.inClassQuestionIds).slice(0, tmp.inClassQuestionCount)
   tmp.afterClassQuestionIds = shuffleArray(info.value.afterClassQuestionIds).slice(0, tmp.afterClassQuestionCount)
@@ -92,11 +95,7 @@ const formatSeconds = seconds => {
   return `${hours ? hours.toString().padStart(2, '0') + ':' : ''}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 const shuffleArray = arr => {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    [arr[i], arr[j]] = [arr[j], arr[i]]
-  }
-  return arr
+  return arr.sort(() => Math.random() - 0.5)
 }
 onMounted(async () => {
   request.get(`/videos/${route.params.videoId}`).then(res => {
@@ -104,6 +103,13 @@ onMounted(async () => {
       info.value = res.data
     }
   })
+  if(route.query?.ids) {
+    if(route.query?.flag == '1') {
+      editData.value.inClassQuestionIds = route.query?.ids
+    } else {
+      editData.value.afterClassQuestionIds = route.query?.ids
+    }
+  }
 })
 </script>
 

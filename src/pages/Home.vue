@@ -1,11 +1,28 @@
 <script setup lang="js">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import banner1 from '@/assets/banner1.jpg'
+import banner2 from '@/assets/banner2.jpg'
+import banner3 from '@/assets/banner3.jpg'
+import banner4 from '@/assets/banner4.jpg'
+import banner5 from '@/assets/banner5.jpeg'
 
-const imgList = [banner1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT24auNFnmM2n4j6vZ1NiexEaIaB5AN7ivCYg&s', '/src/assets/img3.jpeg', '/src/assets/img4.jpeg']
+const imgList = [banner1, banner2, banner3, banner4]
 const myRef = ref()
 const binnerWidth = ref()
+const router = useRouter()
+
+const checkLogin = () => {
+  if (localStorage.getItem('token')) {
+    router.push('/createVideo')
+  } else {
+    ElMessage({
+      message: '请登录',
+      type: 'warning',
+    })
+  }
+}
 onMounted(()=>{
   console.log(myRef.value?.clientWidth)
   binnerWidth.value = myRef.value?.clientWidth
@@ -28,9 +45,7 @@ onMounted(()=>{
       <h3>还没想好写什么</h3>
       <h3>....</h3>
       <h3>....</h3>
-      <el-button round  @click="ElMessage({
-              message: '暂未开放此功能, 敬请期待',
-            })">体验更专业的定制服务</el-button>
+      <el-button round  @click="checkLogin('/createVideo')">体验更专业的定制服务</el-button>
     </div>
   </div>
 </template>

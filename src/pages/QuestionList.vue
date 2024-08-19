@@ -6,8 +6,9 @@
     :suffix-icon="Search"
     @blur="searchHandler"
   />
-  <el-button type="primary"  v-if="showChoose">保存</el-button>
-  <el-table :data="tableData" border fit>
+  <el-button type="primary" @click="saveChoose" v-if="showChoose">保存</el-button>
+  <el-table :data="tableData" border fit 
+    @selection-change="handleSelectionChange">
     <el-table-column v-if="showChoose" type="selection"/>
     <el-table-column prop="questionContent" label="题目" />
     <el-table-column label="选项" >
@@ -43,16 +44,15 @@ import request from '@/request.js'
 const router = useRouter()
 const route = useRoute()
 
-console.log(route.query?.flag)
 const showChoose = ref(route.query?.flag)
-
+console.log(route.query)
 const total = ref()
+const chooseList = ref([])
 const tableData = ref([])
 const searchKey = ref('')
 const currentPage = ref(1)
 const pageSize = 20
 const formatOptions = list => {
-  console.log(list, list?.map(item => item.content).join(','))
   return list?.map(item => item.content).join(',')
 }
 const getData = (val = 1) => {
@@ -71,6 +71,19 @@ const getData = (val = 1) => {
 const searchHandler = () => {
   currentPage.value = 1
   getData()
+}
+const handleSelectionChange = val => {
+  chooseList.value = val
+}
+const saveChoose = () => {
+  console.log(chooseList.value.map(item => item.id))
+  router.push({
+    path:`/editVideo/${route.query?.id}`,
+    query: {
+      ids: chooseList.value.map(item => item.id),
+      flag: route.query?.flag
+    }
+  })
 }
 onMounted(async () => {
   getData()

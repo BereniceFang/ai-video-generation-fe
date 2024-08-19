@@ -14,6 +14,7 @@ const goToEditHandler = () => {
     videoInfo: props.data
   }})
 }
+
 // const count = ref(0)
 </script>
 
@@ -21,7 +22,7 @@ const goToEditHandler = () => {
   <!-- <h1>{{ msg }}</h1> -->
   <el-card shadow="hover" class="card-item">
     <div class="video-wrap">
-      <img :src="data?.imageUrl" width="100%" />
+      <img :src="data?.imageUrl" width="100%" @load="$emit('imgLoaded')" />
     </div>
     <div class="text-wrap">
       <div class="text-title">

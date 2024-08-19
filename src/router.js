@@ -5,6 +5,7 @@ import EditVideoView from '@/pages/EditVideo.vue'
 import List from '@/pages/List.vue'
 import QuestionList from '@/pages/QuestionList.vue'
 import ShareVideo from '@/pages/ShareVideo.vue'
+import CreateVideo from '@/pages/CreateVideo.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -12,6 +13,7 @@ const routes = [
   { path: '/editVideo/:videoId', component: EditVideoView },
   { path: '/questionList', component: QuestionList },
   { path: '/shareVideo/:videoId', component: ShareVideo },
+  { path: '/createVideo', component: CreateVideo },
 ]
 
 const router = createRouter({
